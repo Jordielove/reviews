@@ -59,10 +59,11 @@ app.post("/writeReview/:id", (req, res) => {
     });
 });
 
+app.post('/bulkAddFakeData', (req, res) => {
+    db.bulkAddReviews();
+    res.end();
+})
 
-// db.seedWithFakeData(id, reviews, () => {
-
-// })
 
 app.listen(port, host, () => {
     console.log("Listening to port 3000");

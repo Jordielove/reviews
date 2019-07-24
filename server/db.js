@@ -8,18 +8,41 @@ const faker = require('faker');
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
+
+
 const ReviewSchema = new mongoose.Schema({
     id: String,
     reviews: []
 });
 
-
-const seedWithFakeData = (id, data, cb) => {
-    db.Reviews.insertMany()
-}
-
-
 const Reviews = mongoose.model('Reviews', ReviewSchema);
+
+const bulkAddReviews = (startIndex) => {
+    let data = [];
+    for(let i = startIndex; i < startIndex + 100000; i++) {
+    let review = {
+        id: i,//figure out a way to get unique ids for each one
+        review: faker.fake("{{lorem.sentences}}")
+     }
+     data.push(review);
+     review = {};
+    }
+    Reviews.collection.insertMany(data)
+    .then(() => {
+        if(startIndex > 10000000) {
+            return;
+        } else {
+            console.log('Start index:', startIndex);
+            bulkAddReviews(startIndex + 100000);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+bulkAddReviews(1);
+
+
 
 const getAll = (cb) => {
     Reviews.find()
@@ -34,6 +57,7 @@ const addReview = (reviewData, id, cb) => {
     .then(cb());
 }
 
+
 // allItems is from oldData.js for initial seeding
 // db.once('open', function () {
 //     console.log("connected mofo");
@@ -45,4 +69,4 @@ const addReview = (reviewData, id, cb) => {
 //     });
 // }.bind(this));
 
-module.exports = { seedWithFakeData, getAll, addReview };
+module.exports = { bulkAddReviews, getAll, addReview };
