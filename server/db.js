@@ -1,26 +1,33 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const password = process.env.password;
-mongoose.connect(`mongodb+srv://hmhendrycks:${password}@projectdb-devxk.mongodb.net/test?retryWrites=true&w=majority`, { useNewUrlParser: true }); 
+mongoose.connect(`mongodb://localhost/Reviews`, { useNewUrlParser: true }); 
 const db = mongoose.connection;
 mongoose.set('useFindAndModify', false);
+const faker = require('faker');
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
-const ProductReviewSchema = new mongoose.Schema({
+const ReviewSchema = new mongoose.Schema({
     id: String,
     reviews: []
 });
 
-const product = mongoose.model('Product', ProductReviewSchema);
+
+const seedWithFakeData = (id, data, cb) => {
+    db.Reviews.insertMany()
+}
+
+
+const Reviews = mongoose.model('Reviews', ReviewSchema);
 
 const getAll = (cb) => {
-    product.find()
+    Reviews.find()
         .then((data) => cb(data))
 }
 
 const addReview = (reviewData, id, cb) => {
-    product.findOneAndUpdate(
+    Reviews.findOneAndUpdate(
         { "id": id },
         { $push: { "reviews": reviewData }}
     )
@@ -38,4 +45,4 @@ const addReview = (reviewData, id, cb) => {
 //     });
 // }.bind(this));
 
-module.exports = { getAll, addReview };
+module.exports = { seedWithFakeData, getAll, addReview };

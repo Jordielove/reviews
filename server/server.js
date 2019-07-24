@@ -7,6 +7,7 @@ const cors = require('cors');
 const port = PORT || 3000;
 const host = HOST || '0.0.0.0';
 const sanitize = require('sanitize-html');
+const fakeData = require('./generateFakeData.js')
 
 app.use(cors());
 app.use('/', express.static(__dirname + '/../dist'));
@@ -57,6 +58,11 @@ app.post("/writeReview/:id", (req, res) => {
      res.redirect("/products/" + req.params.id);
     });
 });
+
+
+// db.seedWithFakeData(id, reviews, () => {
+
+// })
 
 app.listen(port, host, () => {
     console.log("Listening to port 3000");
